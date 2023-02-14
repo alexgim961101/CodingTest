@@ -1,4 +1,4 @@
-package DoItCodingTest.SliddingWindow;
+package DoItCodingTest.SlidingWindow;
 
 import java.io.BufferedReader;
 import java.io.IOException;
