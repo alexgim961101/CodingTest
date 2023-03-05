@@ -3,6 +3,7 @@ package DoItCodingTest.Stack;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 /**
@@ -18,10 +19,20 @@ public class B_17298 {
         output();
     }
     private static void process() {
-        result[n-1] = -1;
-        int max = arr[n-1];
-        for(int i = n - 2; i >= 0; i--){
+        Stack<Integer> stk = new Stack<>();
 
+        stk.push(0);
+        for(int i = 1; i < n; i++){
+            while (!stk.isEmpty() && arr[stk.peek()] < arr[i]){
+                int idx = stk.pop();
+                result[idx] = arr[i];
+            }
+            stk.push(i);
+        }
+
+        while (!stk.isEmpty()) {
+            int idx = stk.pop();
+            result[idx] = -1;
         }
     }
 
