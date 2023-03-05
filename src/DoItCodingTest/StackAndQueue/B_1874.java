@@ -1,4 +1,4 @@
-package DoItCodingTest.Stack;
+package DoItCodingTest.StackAndQueue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
