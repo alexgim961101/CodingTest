@@ -1,8 +1,6 @@
 package DoItCodingTest.sort;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.StringTokenizer;
 
 public class B_11004 {
@@ -10,6 +8,7 @@ public class B_11004 {
     static int[] arr;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 
         n = Integer.parseInt(st.nextToken());
@@ -21,7 +20,9 @@ public class B_11004 {
             arr[i] = Integer.parseInt(st.nextToken());
         }
         quickSort(0, n - 1, k - 1);
-        System.out.print(arr[k-1]);
+        bw.append(String.valueOf(arr[k-1]));
+        bw.flush();
+        bw.close();
     }
 
     private static void quickSort(int start, int end, int k) {
@@ -41,9 +42,14 @@ public class B_11004 {
         int i = start + 1;
         int j = end;
         while (i < j) {
-            while (pivot < arr[j]) j--;
-            while (j > i && pivot > arr[i]) i++;
-            swap(i, j);
+            while (pivot < arr[j]) i++;
+            while (arr[j] > pivot) j--;
+
+            if (i <= j) {
+                swap(i, j);
+                i++;
+                j--;
+            }
         }
         int tmp = arr[i];
         arr[i] = pivot;
