@@ -4,49 +4,49 @@ package inflearn.graph;
 import java.util.*;
 
 public class First {
-    int[] dist;
-    boolean[] visited;
-    ArrayList<Point>[] list;
-    Queue<Point> queue;
     public int solution(int n, int[][] flights, int s, int e, int k){
         int answer = 0;
 
-        dist = new int[n];
-        Arrays.fill(dist, Integer.MAX_VALUE);
-        dist[s] = 0;
-
-        visited = new boolean[n];
-        visited[s] = true;
-
-        list = new ArrayList[n];
-        for(int i = 0; i < n; i++){
+        ArrayList<Area>[] list = new ArrayList[n];
+        for (int i = 0; i < n; i++){
             list[i] = new ArrayList<>();
         }
 
+        int[] costs = new int[n];
+        Arrays.fill(costs, Integer.MAX_VALUE);
+
         for(int i = 0; i < flights.length; i++){
-            list[flights[i][0]].add(new Point(flights[i][1], flights[i][2]));
+            int start = flights[i][0];
+            int end = flights[i][1];
+            int cost = flights[i][2];
+
+            list[start].add(new Area(end, cost));
         }
 
-        queue = new LinkedList<>();
-        queue.offer(new Point(s, 0));
-
-        while (!queue.isEmpty() && k >= 0){
-            k--;
+        Queue<Area> queue = new LinkedList<>();
+        queue.offer(new Area(s, 0));
+        costs[s] = 0;
+        int L = 0;
+        while (!queue.isEmpty()) {
             int size = queue.size();
-            for(int i = 0; i < size; i++){
-                Point now = queue.poll();
-                for(Point node : list[now.dest]) {
-                    int next = node.dest;
-                    int newCost = node.weight + now.weight;
-                    if(newCost < dist[next]) {
-                        dist[next] = newCost;
-                        queue.offer(new Point(next, newCost));
+            for(int i = 0; i < size; i++) {
+                Area now = queue.poll();
+
+                for (Area nx : list[now.dest]) {
+                    int endPont = nx.dest;
+                    int endCost = nx.cost;
+
+                    if (now.cost + endCost < costs[endPont]) {
+                        costs[endPont] = now.cost + endCost;
+                        queue.offer(new Area(endPont, costs[endPont]));
                     }
                 }
             }
+            L++;
+            if(L > k) break;
         }
 
-        answer = dist[e] == Integer.MAX_VALUE ? -1 : dist[e];
+        answer = costs[e] == Integer.MAX_VALUE ? -1 : costs[e];
 
         return answer;
     }
@@ -59,13 +59,13 @@ public class First {
         System.out.println(T.solution(10, new int[][]{{1, 8, 50}, {0, 8, 30}, {1, 0, 10}, {2, 8, 10}, {0, 3, 10}, {1, 5, 10}, {1, 7, 100}, {0, 1, 10}, {0, 2, 10}, {5, 7, 30}, {3, 7, 10}, {1, 3, 5}, {2, 3, 3}}, 1, 8, 2));
     }
 
-    static class Point {
+    static class Area {
         int dest;
-        int weight;
+        int cost;
 
-        public Point(int dest, int weight) {
+        public Area(int dest, int cost) {
             this.dest = dest;
-            this.weight = weight;
+            this.cost = cost;
         }
     }
 }

@@ -2,7 +2,6 @@ package inflearn.hashing;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Second {
@@ -24,8 +23,6 @@ public class Second {
             int dif = max - map.getOrDefault(ch, 0);
             answer[i] = dif;
         }
-
-
 
         return answer;
     }
