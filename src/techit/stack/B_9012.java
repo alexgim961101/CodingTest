@@ -6,12 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Stack;
 
-/**
- * 예외
- * 1). 스택이 비어있을 경우에 ) 가 들어옴
- * 2). 마지막에 스택 사이즈가 0이 아닌 경우
- * 3).
- * */
 public class B_9012 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
