@@ -11,27 +11,24 @@ import java.util.Arrays;
  * 5). answer에 저장
  * */
 public class First {
-    int[][] check;
+    
     public char[] solution(int n, int[][] ladder){
         char[] answer = new char[n];
 
-        check = new int[ladder.length][n];
-        for(int i = 0; i < ladder.length; i++){
-            for(int x : ladder[i]) {
-                x--;
-                check[i][x] = 1;
-                check[i][x+1] = 2;
+        for(int i = 1; i <= n; i++) {
+            int idx = i - 1;
+            for(int j = 0; j < ladder.length; j++) {
+                for(int k : ladder[j]) {
+                    if(idx == k - 1) {
+                        idx++;
+                        break;
+                    } else if (idx == k) {
+                        idx--;
+                        break;
+                    }
+                }
             }
-        }
-
-        for(int i = 0; i < n; i++){
-            int person = i;
-            for (int j = 0; j < ladder.length; j++){
-                if(check[j][person] == 1) person += 1;
-                else if(check[j][person] == 2) person -= 1;
-            }
-
-            answer[person] = (char) ('A' + i);
+            answer[idx] = (char) (64 + i);
         }
 
         return answer;

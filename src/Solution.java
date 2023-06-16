@@ -1,82 +1,60 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.io.*;
+import java.util.*;
+
+/**
+ * 해결 순서
+ * 1). orders의 각 문자열들을 오름차순으로 정렬 -> 원소 조합을 찾기에 유리할 듯?
+ * 2). course[i]의 길이만큼 나올 수 있는 조합을 구함
+ * 3). 구한 조합을 이용하여 orders배열에서 얼마나 사용되었는지 확인 (HashMap 사용)
+ * 4).
+ */
+
 class Solution {
-    static int answer;
-    static int[] dx = {0, 1, 0, -1};
-    static int[] dy = {-1, 0, 1, 0};
-    static int[][] dist;
-    static boolean[][] visited;
-    static boolean flag = false;
-    static int[] dirCount = {0, 0, 0, 0};
-    public String solution(int[][] M, int[] S, int[] D) {
+    static HashMap<String, Integer> map;
 
-        dist = new int[M.length][M[0].length];
-        visited = new boolean[M.length][M[0].length];
-        answer = 0;
+    public List<String> solution(String[] orders, int[] course) {
+        List<String> answer = new ArrayList<>();
 
-        Queue<Point> queue = new LinkedList<>();
-        visited[S[1]][S[0]] = true;
-        queue.offer(new Point(S[0], S[1]));
+        // 1.
+        for(int i = 0; i < orders.length; i++) {
+            char[] arr = orders[i].toCharArray();
+            Arrays.sort(arr);
+            orders[i] = String.valueOf(arr);
+        }
 
-        while(!queue.isEmpty()) {
-            Point now = queue.poll();
+        // 2.
+        for(int i = 0; i < course.length; i++) {
+            map = new HashMap<>();
+            int max = Integer.MIN_VALUE;
+            for(int j = 0; j < orders.length; j++) {
+                StringBuilder sb = new StringBuilder();
+                if(course[i] <= orders[i].length()) combi(orders[i], sb, 0, 0, course[i]);
+            }
 
-            for(int i = 0; i < 4; i++) {
-                int nx = now.x + dx[i];
-                int ny = now.y + dy[i];
+            for(Map.Entry<String, Integer> entry : map.entrySet()) {
+                max = Math.max(max, entry.getValue());
+            }
 
-                if(nx < 0 || nx >= M[0].length || ny < 0 || ny >= M.length) continue;
-                if(M[ny][nx] == 1 || visited[ny][nx]) continue;
-
-                visited[ny][nx] = true;
-                dist[ny][nx] = dist[now.y][now.x] + 1;
-                queue.offer(new Point(nx, ny));
+            for(Map.Entry<String, Integer> entry : map.entrySet()) {
+                if(max >= 2 && entry.getValue() == max) answer.add(entry.getKey());
             }
         }
 
-        int minDist = dist[D[1]][D[0]];
-        visited = new boolean[M.length][M[0].length];
-        DFS(new Point(S[0], S[1]), new Point(D[0], D[1]), 0, minDist, M, 0, 0, 0, 0);
+        Collections.sort(answer);
 
-        return dirCount[0] + "/" + dirCount[1] + "/" + dirCount[2] + "/" + dirCount[3];
+        return answer;
     }
 
-    public void DFS(Point start, Point end, int depth, int minDist, int[][] M, int up, int down, int left, int right) {
-        if(flag) return;
-        if(depth > minDist) return;
-        if(depth == minDist && start.x == end.x && start.y == end.y) {
-            flag = true;
-            answer++;
-            dirCount[0] = up;
-            dirCount[1] = down;
-            dirCount[2] = left;
-            dirCount[3] = right;
+    public static void combi(String str, StringBuilder sb, int idx, int cnt, int n) {
+        if(cnt == n) {
+            map.put(sb.toString(), map.getOrDefault(sb.toString(), 0) + 1);
             return;
         }
-        for(int i = 0; i < 4; i++){
-            int nx = start.x + dx[i];
-            int ny = start.y + dy[i];
 
-            if(nx < 0 || nx >= M[0].length || ny < 0 || ny >= M.length) continue;
-            if(M[ny][nx] == 1 || visited[ny][nx]) continue;
-
-            if(i == 0) up++;
-            else if(i == 1) right++;
-            else if(i == 2) down++;
-            else left++;
-
-            visited[ny][nx] = true;
-            DFS(new Point(nx, ny), end, depth+1, minDist, M, up, down, left, right);
-            visited[ny][nx] = false;
-        }
-    }
-
-    static class Point {
-        int x, y;
-
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
+        for(int i = idx; i < str.length(); i++) {
+            sb.append(str.charAt(i));
+            combi(str, sb, i+1, cnt+1, n);
+            sb.delete(cnt, cnt + 1);
         }
     }
 }
