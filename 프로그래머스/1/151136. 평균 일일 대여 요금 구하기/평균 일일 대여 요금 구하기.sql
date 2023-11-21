@@ -1,0 +1,5 @@
+-- 코드를 입력하세요
+select ROUND(AVG(DAILY_FEE), 0) AS 'AVERAGE_FEE'
+from CAR_RENTAL_COMPANY_CAR
+group by CAR_TYPE
+HAVING CAR_TYPE = 'SUV'
